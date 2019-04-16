@@ -8,9 +8,9 @@
 
 Used `file` to determine that the given download contained `gzip compressed data` before extracting the contents using `tar`. This extracted a bunch of directories (each containing `layer.tar` and some other unimportant files), `44922ae2...c67ff784.json` and `manifest.json`.
 
-I originally wrote some code to just decompress all the `layer.tar` files after discovering references to `/root/flag.sh` within `44922ae2...c67ff784.json`:
+I initially just decompressed all the `layer.tar` files after discovering references to `/root/flag.sh` within `44922ae2...c67ff784.json`:
 
-```json
+```js
 {
   "container": "23e9240f8ca97d3bfba72f23a57703138fb3a16d7e3e19f7d5b80d177ab50b5d",
   "created": "2019-04-13T20:58:53.322050465Z",
@@ -29,14 +29,14 @@ I originally wrote some code to just decompress all the `layer.tar` files after 
 }
 ```
 
-Unfortunately, after extracting everything from each of the `layer.tar` files, running `flag.sh` resulted in a flag that was clearly not correct.
+Unfortunately, after extracting everything in no particular order, running `flag.sh` resulted in output that was clearly not correct.
 
 ```
  $ ./flag.sh 
  pctf{1_b3tk4_auultn__s0lk3m7tr_ui2l7u_h_er}
 ```
 
-A quick look at `flag.sh` shows that it concatenates 32 files (also within `/root`) that are named using the numbers 1 through 32 (with later examination revealing that each file contained a single character). The fact that the resulting flag was incorrect suggested files had been overwritten, and that the order of extraction was important.
+A quick look at `flag.sh` showed that it was concatenating 32 files (also within `/root`) named using the numbers 1 through 32 (with later examination revealing that each file contained a single character). The fact that the resulting flag was incorrect suggested files had been overwritten, and that the **order** of extraction was important.
 
 ```bash
 #!/bin/bash
@@ -56,7 +56,7 @@ echo pctf{1_b3t$(cat 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
 
 The `manifest.json` file (and also `44922ae2...c67ff784.json`) from the original archive confirm a particular extraction sequence for the `layer.tar` files, however, the names of **21** of the 27 directories extracted from the archive have been masked.
 
-```json
+```js
 {
   "Layers": [
     "2354d65e014cbe530f9695dbe3faf8ac84d85d7ad91f5d46ba8ef3fc0cd88d95\/layer.tar",
@@ -84,7 +84,7 @@ Using the above knowledge and the clue within the challenge description about `a
 * No file can be deleted that doesn't exist (ie, it must be added first)
 * No file can be added that currently exists (ie, it must have *not* been added yet or needs to be deleted first)
 
-My solution ([a-whaley-good-joke.py](a-whaley-good-joke.py)) creates a tree structure of alternating ADD/DELete revision nodes that explores sequence orders of revisions which satisfy the above rules. A valid sequence order will have a tree depth of 21 (ie, using all the possible revisions). The script then extracts the files based on each valid sequence ordering and displays the potential flag. 
+The code in [[a-whaley-good-joke.py](a-whaley-good-joke.py)] creates a tree structure of alternating `ADD`/`DEL` revision nodes that explores sequence orders of extractions which satisfy the above rules. A valid sequence order will have a tree depth of 21 (ie, using all the possible revisions). The script then extracts the files based on each valid sequence ordering and displays the potential flags. 
 
 There were actually 24 valid revision sequences combining for an assortment of possible flags:
 
