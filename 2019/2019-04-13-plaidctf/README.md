@@ -54,7 +54,7 @@ done
 echo pctf{1_b3t$(cat 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32)}
 ```
 
-The `manifest.json` file (and also `44922ae2...c67ff784.json`) from the original archive confirm a particular extraction sequence for the `layer.tar` files, however, the names of **21** of the 27 directories extracted from the archive have been masked.
+The `manifest.json` file (and also `44922ae2...c67ff784.json`) from the original archive confirmed a particular extraction sequence for the `layer.tar` files, however, the names of **21** of the 27 directories extracted from the archive had been masked.
 
 ```js
 {
