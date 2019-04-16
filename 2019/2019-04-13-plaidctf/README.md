@@ -84,7 +84,7 @@ Using the above knowledge and the clue within the challenge description about `a
 * No file can be deleted that doesn't exist (ie, it must be added first)
 * No file can be added that currently exists (ie, it must have *not* been added yet or needs to be deleted first)
 
-The code in [[a-whaley-good-joke.py](a-whaley-good-joke.py)] creates a tree structure of alternating `ADD`/`DEL` revision nodes that explores sequence orders of extractions which satisfy the above rules. A valid sequence order will have a tree depth of 21 (ie, using all the possible revisions). The script then extracts the files based on each valid sequence ordering and displays the potential flags. 
+The code in [ [a-whaley-good-joke.py](a-whaley-good-joke.py) ] creates a tree structure of alternating `ADD`/`DEL` revision nodes that explores sequence orders of extractions which satisfy the above rules. A valid sequence order will have a tree depth of 21 (ie, using all the possible revisions). The script then extracts the files based on each valid sequence ordering and displays the potential flags. 
 
 There were actually 24 valid revision sequences combining for an assortment of possible flags:
 
