@@ -2,9 +2,51 @@
 
 [ https://ctftime.org/event/743 ]
 
+## Space Saver
+
+> we couldn't think of anything cute so [here](https://play.plaidctf.com/files/space_saver-90a5a93dfdda2d0333f573eb3fac9789.dd) you go
+
+[ **misc** : 100pts ]
+
+As this appeared to be an genuine `.dd` file, the first step was to simply mount the disk image:
+
+```
+mount -o loop space_saver-90a5a93dfdda2d0333f573eb3fac9789.dd /mnt/tmp
+```
+
+However, the only file that could initially be found did not contain the flag despite being named `flag.png`:
+
+![flag.png](space-saver-flag.png)
+
+Running various steganography tools against the image didn't uncover anything useful; however, the tildes (`~`) used in `~WIN~` suggested re-examining the original `.dd` and searching for **deleted** files. Using `testdisk` uncovered the following files which were duly extracted from the disk image:
+
+<img src="space-saver-testdisk.png" width="600" alt="testdisk output">
+
+The `P.png`, `PP.png` and `PPP.png` files were all identical and showed the CTF organiser's logo ([PPP](http://pwning.net/)). Again, steganography tools uncovered nothing. The `space.rar` file was more interesting, but unfortunately password-encoded.
+
+While running some basic brute-forcing using `john`, I randomly decided to investigate the raw hex of the `.dd` file for more clues. Focusing primarily on the `P`/`PP`/`PPP.png` file data (as I was curious as to why they were hidden along with the `.rar` file), I uncovered the following near the `IEND` footers of each `PNG`:
+
+```
+00040260: 0000 4945 4e44 ae42 6082 0053 7061 6300  ..IEND.B`..Spac.
+00044260: 0000 4945 4e44 ae42 6082 0033 6569 3200  ..IEND.B`..3ei2.
+00048260: 0000 4945 4e44 ae42 6082 0068 6572 4500  ..IEND.B`..herE.
+```
+
+Re-constructing the suspicious looking text into `Spac3ei2herE` provided the correct password to `space.rar` and allowed `final.png` to be extracted:
+
+<img src="space-saver-final.png" width="500" alt="final.png">
+
+Flag:
+
+```
+PCTF{2pac3_3v34ry_wh3r3}
+```
+
 ## A Whaley Good Joke
 
 > You'll have a whale of a time with [this one](https://play.plaidctf.com/files/pctf-whales_169aeb74f82dcdceb76e36a6c4c22a89)! I couldn't decide what I wanted the flag to be so I alternated adding and removing stuff in waves until I got something that looked good. Can you dive right in and tell me what was so punny?
+
+[ **misc** : 150pts ]
 
 Used `file` to determine that the given download contained `gzip compressed data` before extracting the contents using `tar`. This extracted a bunch of directories (each containing `layer.tar` and some other unimportant files), `44922ae2...c67ff784.json` and `manifest.json`.
 
@@ -100,7 +142,7 @@ Extracting sequence #06 : pctf{1_b3t_u_couldnt0s0nt4in3e_urel4ught3r}
 ...
 ```
 
-The correct result was determined by simply seeing which of the flags made sense.
+The correct result was determined by simply seeing which of the flags made sense:
 
 ```
 pctf{1_b3t_u_couldnt_c0nt4in3r_ur_l4ught3r}
