@@ -40,7 +40,7 @@ tshark -r fixed.pcap -o 'ssl.keylog_file:sslkey.log' -Y 'http contains "GET /sea
 
 And the script below then extracts and concatenates all the `kcahsni` hex values before decoding them.
 
-```
+```python
 hexstr = ''
 with open('queries.txt', 'rt') as f:
     hexstr = ''.join([param.split(',')[0][109:] for param in f.readlines()])
